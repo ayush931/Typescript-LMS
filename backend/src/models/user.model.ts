@@ -69,7 +69,11 @@ userSchema.pre('save', async function (next) {
 // writing generic methods
 userSchema.methods = {
   generateJwtToken: function () {
-    return jwt;
+    return jwt.sign(
+      { id: this._id, email: this.email, role: this.role },
+      process.env.JWT_TOKEN as string,
+      { expiresIn: (process.env.JWT_EXPIRY as string) || '1h' }
+    );
   },
 };
 
